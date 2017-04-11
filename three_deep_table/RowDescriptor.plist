@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>isExpandable</key>
+		<false/>
+		<key>isExpanded</key>
+		<true/>
+		<key>isVisible</key>
+		<true/>
+		<key>cellIdentifier</key>
+		<string>L0_Cell</string>
+		<key>additionalRows</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>isExpandable</key>
+		<true/>
+		<key>isExpanded</key>
+		<false/>
+		<key>isVisible</key>
+		<true/>
+		<key>cellIdentifier</key>
+		<string>L1_Cell</string>
+		<key>additionalRows</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>isExpandable</key>
+		<false/>
+		<key>isExpanded</key>
+		<false/>
+		<key>isVisible</key>
+		<false/>
+		<key>cellIdentifier</key>
+		<string>L2_Cell</string>
+		<key>additionalRows</key>
+		<integer>0</integer>
+	</dict>
+</array>
+</plist>
