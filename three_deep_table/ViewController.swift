@@ -9,6 +9,10 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
+	//	set to true to allow
+	//	multiple L1 rows to
+	//	be isExpanded
+	var multiRowExpand = false
 	var rowDictionary = [[String:Any]]()
 
 	@IBOutlet weak var tableView: UITableView!
@@ -188,21 +192,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	{
 		var rowDict = rowDictionary[indexPath.row] as [String:Any]
 	
-//		var index = 0
-//		for var rd in rowDictionary
-//		{
-//			if rd["additionalRows"] as! Int == 0
-//			{
-//				if rd["isVisible"] as! Bool == true
-//				{
-//					rd["isVisible"] = false
-//				}
-//			}
-//			
-//			rowDictionary[index] = rd
-//			
-//			index += 1
-//		}
+		if multiRowExpand == false
+		{
+			var index = 0
+			for var rd in rowDictionary
+			{
+				if rd[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
+				{
+					if rd[KEY_IS_EXPANDED] as! Bool == true
+					{
+						rd[KEY_IS_EXPANDED] = false
+					}
+				}
+				else if rd["additionalRows"] as! Int == 0
+				{
+					if rd["isVisible"] as! Bool == true
+					{
+						rd["isVisible"] = false
+					}
+				}
+				
+				rowDictionary[index] = rd
+				
+				index += 1
+			}
+		}
 		
 		if rowDict[KEY_IS_EXPANDABLE] as! Bool == true
 		{
@@ -243,10 +257,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
 		switch rowDict[KEY_CELL_IDENTIFIER] as! String
 		{
-			case "L0_Cell":
+			case VALUE_L0_CELL:
 				return 30.0
 
-			case "L1_Cell":
+			case VALUE_L1_CELL:
 				return 30.0
 
 			default:
