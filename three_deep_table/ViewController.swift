@@ -9,10 +9,9 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
-	//	set to true to allow
-	//	multiple L1 rows to
-	//	be isExpanded
-	var multiRowExpand = false
+	//	set to true to allow only
+	//	one L1_Cell to be selected
+	var singleRowSelect = true
 	var rowDictionary = [[String:Any]]()
 
 	@IBOutlet weak var tableView: UITableView!
@@ -192,7 +191,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	{
 		var rowDict = rowDictionary[indexPath.row] as [String:Any]
 	
-		if multiRowExpand == false
+		if singleRowSelect == true
+		&& rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
 		{
 			var index = 0
 			for var rd in rowDictionary
@@ -211,9 +211,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 						rd["isVisible"] = false
 					}
 				}
-				
+
 				rowDictionary[index] = rd
-				
+
 				index += 1
 			}
 		}
