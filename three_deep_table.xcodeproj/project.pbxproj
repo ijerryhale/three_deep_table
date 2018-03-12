@@ -50,6 +50,7 @@
 		2C8904E02056005500126C94 /* L1_Cell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = L1_Cell.xib; path = three_deep_table/L1_Cell.xib; sourceTree = "<group>"; };
 		2C90770A1E9C3DE0006FFDC7 /* theater.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = theater.json; path = three_deep_table/theater.json; sourceTree = SOURCE_ROOT; };
 		2CC00B9F2056035A00C12E5C /* L2_Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = L2_Cell.swift; path = three_deep_table/L2_Cell.swift; sourceTree = "<group>"; };
+		2CC927F4205742ED0091053D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2CEDC13E2055B14E0071EB14 /* L0_Cell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = L0_Cell.swift; path = three_deep_table/L0_Cell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -101,6 +102,7 @@
 		2C83BF2E1D82238E006B4CC6 = {
 			isa = PBXGroup;
 			children = (
+				2CC927F4205742ED0091053D /* README.md */,
 				2C5D7F2A1E9BBF7F00AE436A /* Info.plist */,
 				2C5D7F291E9BBEA800AE436A /* three_deep_table-Bridging-Header.h */,
 				2C4FE12A1D8267C700F1A3FF /* Objective C */,
