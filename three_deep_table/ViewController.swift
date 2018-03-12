@@ -7,171 +7,51 @@
 
 import UIKit
 
-extension UIColor
-{
-    convenience init(hex:Int, alpha:CGFloat = 1.0)
-    {
-        self.init(
-            red:   CGFloat((hex & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((hex & 0x00FF00) >> 8)  / 255.0,
-            blue:  CGFloat((hex & 0x0000FF) >> 0)  / 255.0,
-            alpha: alpha
-        )
-    }
-}
-
-extension UIView
-{
-    func rotate(_ toValue: CGFloat, duration: CFTimeInterval = 0.2)
-    {
-        let animation = CABasicAnimation(keyPath: "transform.rotation")
-		
-        animation.toValue = toValue
-        animation.duration = duration
-        animation.isRemovedOnCompletion = false
-        animation.fillMode = kCAFillModeForwards
-		
-        self.layer.add(animation, forKey: nil)
-    }
-}
-
-public struct L_2 {
-    var name: String
-	var collapsed: Bool
-	
-    public init(name: String, collapsed: Bool = false) {
-        self.name = name
-        self.collapsed = collapsed
-    }
-}
-
-public struct TableViewRow
-{
-    var name: String
-    var cellID: String
-	var collapsed: Bool
-	
-	public init() {
-        self.name = "name"
-        self.cellID = "cellID"
-        self.collapsed = false
-    }
-
-    public init(name: String, cellID: String, collapsed: Bool = false) {
-        self.name = name
-        self.cellID = cellID
-        self.collapsed = collapsed
-    }
-}
-
 public struct Section {
     var name: String
-    var items: [TableViewRow]
-    var collapsed: Bool
+    var isExpanded: Bool
+	var cell = [[String : Any]]()
 	
-	public init(name: String, collapsed: Bool = false) {
+	public init(name: String, isExpanded: Bool = false) {
         self.name = name
-        items = []
-        self.collapsed = collapsed
-    }
-
-    public init(name: String, items: [TableViewRow], collapsed: Bool = false) {
-        self.name = name
-        self.items = items
-        self.collapsed = collapsed
-    }
-	
-    func cellCount() -> Int
-    {
-		let l1count = items.count
-		
-		print(l1count)
-
-		return (items.count)
+        self.isExpanded = isExpanded
     }
 }
 
-protocol L0_Delegate {
-    func toggleSection(_ header: L0_Cell, section: Int)
-}
-
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
+class ViewController: UIViewController
 {
 	//	set to true to allow only
 	//	one L1_Cell to be selected
 	var singleRowSelect = true
-	var rowDictionary = [[String:Any]]()
-
-	var sections =  [Section]()
+	var rowDictionary = [Section]()
 
 	@IBOutlet weak var tableView: UITableView!
 	
 	func appDelegate() -> AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
 
-
-//public var sectionsData: [Section] = [
-//    Section(name: "Despicable Me 3", items: [
-//        TableViewRow(name: "Bluelight Cinema 5" , cellID: VALUE_L1_CELL),
-//		TableViewRow(name: "1:15 PM" , cellID: VALUE_L2_CELL),
-//		TableViewRow(name: "2:30 PM" , cellID: VALUE_L2_CELL),
-//
-//        TableViewRow(name: "Downtown Cineplex" , cellID: VALUE_L1_CELL),
-//		TableViewRow(name: "4:15 PM" , cellID: VALUE_L2_CELL),
-//		TableViewRow(name: "5:30 PM" , cellID: VALUE_L2_CELL)
-//
-//
-//         ]),
-//    Section(name: "Leap!", items: [
-//        TableViewRow(name: "AMC 16" , cellID: VALUE_L1_CELL),
-//		TableViewRow(name: "12:00 PM" , cellID: VALUE_L2_CELL),
-//		TableViewRow(name: "1:30 PM" , cellID: VALUE_L2_CELL)
-//
-//         ])
-//
-//]
-
 	override func viewDidLoad()
-	{
-        super.viewDidLoad()
+	{ super.viewDidLoad()
 
 		//	loop thru Movies and list all
 		//	Theaters for a given Movie
 		
 		//	create a UITableView which
-		//	has a non-collapsable L0_Cell
-		//	that is initially expanded
+		//	has a expandable Section
+		//	that is initially collapsed
 
 		let t:[[String: AnyObject]] = appDelegate().theater
 		let m:[[String: AnyObject]] = appDelegate().movie
-		
-		var startRow = 0
+
 		var rowNum = -1
 		
 		//	loop thru all Movies
 		for i in 0...m.count - 1
 		{
 			let movie = m[i]
-			
-			startRow = rowNum + 1
-			rowNum += 1
-
 			var additionalRows = 0
-			//	L0 dictionary (Movie), one per
-			//	L0_Cell everything that is statically
-			//	defined is required to track
-			//	the state of this UITableViewCell
-			var l0_dict = [KEY_IS_EXPANDABLE : false,
-						KEY_IS_EXPANDED : true,
-						KEY_IS_VISIBLE : true,
-						KEY_CELL_IDENTIFIER : VALUE_L0_CELL,
-						KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
-
-			//	add Movie title to dictionary
-			
 			var section = Section(name: movie[KEY_TITLE] as! String)
-			l0_dict[KEY_TITLE] = movie[KEY_TITLE]
-			/* l0_dict["rowNum"] = rowNum for dbug */
 
+			rowNum += 1
 			//	loop thru all Theaters and look
 			//	at now_showing array for this Movie
 			for j in 0...t.count - 1
@@ -193,19 +73,15 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 						//	defined is required to track
 						//	the state of this UITableViewCell
 						var l1_dict = [KEY_IS_EXPANDABLE : true,
-									KEY_IS_EXPANDED : false,
+									KEY_IS_EXPANDED : true,
 									KEY_IS_VISIBLE : true,
 									KEY_CELL_IDENTIFIER : VALUE_L1_CELL,
 									KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
 
-						
 						//	add Theater name to
 						//	L1_Cell  dictionary
 						l1_dict[KEY_NAME] = tt[KEY_NAME]
-						
-						//TableViewRow(name: tt[KEY_NAME] , cellID: VALUE_L1_CELL)
-						
-						section.items.append(TableViewRow(name: tt[KEY_NAME] as! String , cellID: VALUE_L1_CELL))
+
 						//	add Movie tms_id to
 						//	L1_Cell dictionary
 						l1_dict[KEY_TMS_ID] = tms_id
@@ -219,39 +95,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 						l1_dict[KEY_ADDITIONAL_ROWS] = alltimes.count
 						
 						/*	l1_dict["rowNum"] = rowNum for dbug */
-
-						rowDictionary.append(l1_dict)
+						section.cell.append(l1_dict)
 						
 						for time in alltimes
 						{
 							rowNum += 1
-							
 							//	L2 dictionary (Movie Showtime),
 							//	one per L2_Cell everything that
 							//	is statically defined is required
 							//	to track the state of this UITableViewCell
 							
 							//	L2_Cells by definition are
-							//	by definition --
 							//	"isExpandable" : false
 							//	"isExpanded" : false,
 							//	"additionalRows" : 0
-			
 							var l2_dict = [KEY_IS_EXPANDABLE : false,
 										KEY_IS_EXPANDED : false,
-										KEY_IS_VISIBLE : false,
+										KEY_IS_VISIBLE : true,
 										KEY_CELL_IDENTIFIER : VALUE_L2_CELL,
 										KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
 							
 							/* l2_dict["rowNum"] = rowNum for dbug */
-
-							//	update additionalRows
-							//	in L2_Cell dictionary
 							l2_dict[KEY_TIME] = (time as! [String : AnyObject])[KEY_TIME] as! String
 							
-							section.items.append(TableViewRow(name: (time as! [String : AnyObject])[KEY_TIME] as! String , cellID: VALUE_L2_CELL))
-							
-							rowDictionary.append(l2_dict)
+							section.cell.append(l2_dict)
 						}
 						
 						break
@@ -259,19 +126,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 				}
 			}
 
-			l0_dict[KEY_ADDITIONAL_ROWS] = additionalRows
-			rowDictionary.insert(l0_dict, at: startRow)
-			
-			sections.append(section)
+			rowDictionary.append(section)
 		}
-	
-		//let section = rowDictionary.filter({ $0[KEY_CELL_IDENTIFIER] as? String == VALUE_L0_CELL }).count
 		
-		print(sections.count)
+		print(rowDictionary.count)
+
 		tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView(frame: CGRect.zero)
-		
 		tableView.separatorColor = UIColor.clear;
 
         tableView.register(UINib(nibName: VALUE_L1_CELL, bundle: nil), forCellReuseIdentifier: VALUE_L1_CELL)
@@ -279,107 +141,125 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	}
 
 	override func viewWillAppear(_ animated: Bool)
-	{
+	{ super.viewWillAppear(animated)
+		
 		tableView.reloadData();
-
-		super.viewWillAppear(animated)
 	}
 }
 
-extension ViewController: L0_Delegate
+extension ViewController: SectionHeaderDelegate
 {
-    func toggleSection(_ header: L0_Cell, section: Int)
+    func toggleSectionIsExpanded(_ header: L0_Cell, section: Int)
     {
-        let collapsed = !sections[section].collapsed
+        let isExpanded = !rowDictionary[section].isExpanded
 		
         // Toggle collapse
-        sections[section].collapsed = collapsed
- 		header.setCollapsed(collapsed)
+        rowDictionary[section].isExpanded = isExpanded
+ 		header.setIsExpanded(isExpanded)
 		
         tableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
     }
 }
 
-extension ViewController
+extension ViewController : UITableViewDelegate
 {
 	func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { return (44.0) }
 	func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat { return (1.0) }
 
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int { return rowDictionary.count  }
-	func numberOfSections(in tableView: UITableView) -> Int { return (sections.count) }
+	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
+	{
+		let cell: [String : Any] = rowDictionary[indexPath.section].cell[indexPath.row]
 
-	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return sections[section].collapsed ? 0 : sections[section].cellCount()
+		if cell[KEY_IS_VISIBLE] as! Bool == false
+		{
+			return 0
+		}
+
+		switch cell[KEY_CELL_IDENTIFIER] as! String
+		{
+			case VALUE_L1_CELL:
+				return 30.0
+
+			default:
+				return 16.0
+		}
+    }
+}
+
+extension ViewController : UITableViewDataSource
+{
+	func numberOfSections(in tableView: UITableView) -> Int { return (rowDictionary.count) }
+
+	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+	{
+        return rowDictionary[section].isExpanded ? rowDictionary[section].cell.count : 0
     }
 
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView?
     {
        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: VALUE_L0_CELL) as? L0_Cell ?? L0_Cell(reuseIdentifier: VALUE_L0_CELL)
 
-		header.setCollapsed(sections[section].collapsed)
+		header.setIsExpanded(rowDictionary[section].isExpanded)
 		header.addGestureRecognizer(UITapGestureRecognizer(target: header, action: #selector(L0_Cell.tapHeader(_:))))
 		
-        header.titleLabel.text = sections[section].name
+        header.titleLabel.text = rowDictionary[section].name
 		header.section = section
 		header.delegate = self
 		
         return (header)
     }
 
-	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-    {
-        let tableViewRow: TableViewRow = sections[indexPath.section].items[indexPath.row]
-		
-		if tableViewRow.cellID == VALUE_L1_CELL
-		{
-			let cell: L1_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L1_CELL) as! L1_Cell
-			
-			cell.name.text = tableViewRow.name
-			
-			return (cell)
-		}
-		else if tableViewRow.cellID == VALUE_L2_CELL
-		{
-			let cell: L2_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L2_CELL) as! L2_Cell
-			
-			cell.time.text = tableViewRow.name
-			
-			return (cell)
-		}
-
-		return (UITableViewCell())
-    }
+//	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+//    {
+//        let cell = rowDictionary[indexPath.section].cell[indexPath.row]
+//
+//		if cell[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
+//		{
+//			let c: L1_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L1_CELL) as! L1_Cell
+//
+//			c.name.text = cell[KEY_NAME] as! String
+//
+//			return (c)
+//		}
+//		else if cell[KEY_CELL_IDENTIFIER] as! String == VALUE_L2_CELL
+//		{
+//			let c: L2_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L2_CELL) as! L2_Cell
+//
+//			c.time.text = cell[KEY_TIME]  as! String
+//
+//			return (c)
+//		}
+//
+//		return (UITableViewCell())
+//    }
 
     // MARK: UITableView Delegate and Datasource Functions
-//	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-//	{
-//		let rowDict = rowDictionary[indexPath.row] as AnyObject
-//		
-//		let	cell = tableView.dequeueReusableCell(withIdentifier:rowDict[KEY_CELL_IDENTIFIER] as! String, for: indexPath) as! SelectableCell
-//
-//		if rowDict[KEY_IS_VISIBLE] as! Bool == true { cell.isHidden = false }
-//		else { cell.isHidden = true }
-//		
-//		if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L0_CELL
-//		{
-//			cell.textLabel?.text = (rowDict[KEY_TITLE] as! String)
-//		}
-//		else if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
-//		{
-//			cell.detailTextLabel?.text = (rowDict[KEY_NAME] as! String)
-//		}
-//		else if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L2_CELL
-//		{
-//			cell.textLabel?.text = (rowDict[KEY_TIME] as! String)
-//		}
-//
-//		return cell
-//    }
+	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
+	{
+		let rowDict = rowDictionary[indexPath.section].cell[indexPath.row]
+		let	cell = tableView.dequeueReusableCell(withIdentifier:rowDict[KEY_CELL_IDENTIFIER] as! String, for: indexPath)
+
+		if rowDict[KEY_IS_VISIBLE] as! Bool == true { cell.isHidden = false }
+		else { cell.isHidden = true }
+		
+		if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
+		{
+			let c = cell as! L1_Cell
+			c.name.text = (rowDict[KEY_NAME] as! String)
+		}
+		else if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L2_CELL
+		{
+			let c = cell as! L2_Cell
+			c.time.text = (rowDict[KEY_TIME] as! String)
+		}
+
+		return cell
+    }
 	
 //	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
 //	{
-//		var rowDict = rowDictionary[indexPath.row] as [String:Any]
-//	
+//		let rowDict = rowDictionary[indexPath.section].cell[indexPath.row]
+//
 //		if singleRowSelect == true
 //		&& rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
 //		{
@@ -406,68 +286,30 @@ extension ViewController
 //				index += 1
 //			}
 //		}
-//		
+//
 //		if rowDict[KEY_IS_EXPANDABLE] as! Bool == true
 //		{
 //            var shouldExpandAndShowSubRows = false
-//			
+//
 //            if rowDict[KEY_IS_EXPANDED] as! Bool == false
 //			{
 //                shouldExpandAndShowSubRows = true
 //            }
 //
 //            rowDict[KEY_IS_EXPANDED] = shouldExpandAndShowSubRows
-//			
+//
 //			for i in (indexPath.row + 1)...(indexPath.row + (rowDict[KEY_ADDITIONAL_ROWS] as! Int))
 //			{
 //				var d = rowDictionary[i] as [String:Any]
 //
 //				d[KEY_IS_VISIBLE] = shouldExpandAndShowSubRows
-//				
+//
 //				rowDictionary[i] = d
 //           }
 //		}
 //
 //		rowDictionary[indexPath.row] = rowDict
-
+//
 //		tableView.reloadSections(NSIndexSet(index: indexPath.section) as IndexSet, with: UITableViewRowAnimation.fade)
 //	}
-	
-//	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
-//    {
-//        return UITableViewAutomaticDimension
-//    }
-
-	func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat
-	{
-		let tableViewRow: TableViewRow = sections[indexPath.section].items[indexPath.row]
-		
-		switch tableViewRow.cellID
-		{
-			case VALUE_L1_CELL:
-				return 30.0
-
-			default:
-				return 14.0
-		}
-
-//		let rowDict = rowDictionary[indexPath.row] as [String:Any]
-//
-//		if rowDict[KEY_IS_VISIBLE] as! Bool == false
-//		{
-//			return 0
-//		}
-//
-//		switch rowDict[KEY_CELL_IDENTIFIER] as! String
-//		{
-//			case VALUE_L0_CELL:
-//				return 30.0
-//
-//			case VALUE_L1_CELL:
-//				return 30.0
-//
-//			default:
-//				return 20.0
-//		}
-    }
 }
