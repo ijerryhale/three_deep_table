@@ -51,6 +51,12 @@ public struct TableViewRow
     var cellID: String
 	var collapsed: Bool
 	
+	public init() {
+        self.name = "name"
+        self.cellID = "cellID"
+        self.collapsed = false
+    }
+
     public init(name: String, cellID: String, collapsed: Bool = false) {
         self.name = name
         self.cellID = cellID
@@ -63,6 +69,12 @@ public struct Section {
     var items: [TableViewRow]
     var collapsed: Bool
 	
+	public init(name: String, collapsed: Bool = false) {
+        self.name = name
+        items = []
+        self.collapsed = collapsed
+    }
+
     public init(name: String, items: [TableViewRow], collapsed: Bool = false) {
         self.name = name
         self.items = items
@@ -79,69 +91,9 @@ public struct Section {
     }
 }
 
-public var sectionsData: [Section] = [
-    Section(name: "Despicable Me 3", items: [
-        TableViewRow(name: "Bluelight Cinema 5" , cellID: VALUE_L1_CELL),
-		TableViewRow(name: "1:15 PM" , cellID: VALUE_L2_CELL),
-		TableViewRow(name: "2:30 PM" , cellID: VALUE_L2_CELL),
-		
-        TableViewRow(name: "Downtown Cineplex" , cellID: VALUE_L1_CELL),
-		TableViewRow(name: "4:15 PM" , cellID: VALUE_L2_CELL),
-		TableViewRow(name: "5:30 PM" , cellID: VALUE_L2_CELL)
-
-		
-         ]),
-    Section(name: "Leap!", items: [
-        TableViewRow(name: "AMC 16" , cellID: VALUE_L1_CELL),
-		TableViewRow(name: "12:00 PM" , cellID: VALUE_L2_CELL),
-		TableViewRow(name: "1:30 PM" , cellID: VALUE_L2_CELL)
-		
-         ])
-
-]
 protocol L0_Delegate {
     func toggleSection(_ header: L0_Cell, section: Int)
 }
-
-//class TableViewRowCell: UITableViewCell {
-//
-//    let nameLabel = UILabel()
-//   // let detailLabel = UILabel()
-//
-//    // MARK: Initalizers
-//    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//
-//        let marginGuide = contentView.layoutMarginsGuide
-//
-//        // configure nameLabel
-//        contentView.addSubview(nameLabel)
-//        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-//        nameLabel.leadingAnchor.constraint(equalTo: marginGuide.leadingAnchor).isActive = true
-//        nameLabel.topAnchor.constraint(equalTo: marginGuide.topAnchor).isActive = true
-//        nameLabel.trailingAnchor.constraint(equalTo: marginGuide.trailingAnchor).isActive = true
-//        nameLabel.numberOfLines = 0
-//        nameLabel.font = UIFont.systemFont(ofSize: 16)
-//
-//        // configure detailLabel
-////        contentView.addSubview(detailLabel)
-////        detailLabel.lineBreakMode = .byWordWrapping
-////        detailLabel.translatesAutoresizingMaskIntoConstraints = false
-////        detailLabel.leadingAnchor.constraint(equalTo: marginGuide.leadingAnchor).isActive = true
-////        detailLabel.bottomAnchor.constraint(equalTo: marginGuide.bottomAnchor).isActive = true
-////        detailLabel.trailingAnchor.constraint(equalTo: marginGuide.trailingAnchor).isActive = true
-////        detailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5).isActive = true
-////        detailLabel.numberOfLines = 0
-////        detailLabel.font = UIFont.systemFont(ofSize: 12)
-////        detailLabel.textColor = UIColor.lightGray
-//    }
-//
-//    required init?(coder aDecoder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//}
-
 
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
@@ -150,11 +102,33 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 	var singleRowSelect = true
 	var rowDictionary = [[String:Any]]()
 
-	var sections = sectionsData
+	var sections =  [Section]()
 
 	@IBOutlet weak var tableView: UITableView!
 	
 	func appDelegate() -> AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+
+
+//public var sectionsData: [Section] = [
+//    Section(name: "Despicable Me 3", items: [
+//        TableViewRow(name: "Bluelight Cinema 5" , cellID: VALUE_L1_CELL),
+//		TableViewRow(name: "1:15 PM" , cellID: VALUE_L2_CELL),
+//		TableViewRow(name: "2:30 PM" , cellID: VALUE_L2_CELL),
+//
+//        TableViewRow(name: "Downtown Cineplex" , cellID: VALUE_L1_CELL),
+//		TableViewRow(name: "4:15 PM" , cellID: VALUE_L2_CELL),
+//		TableViewRow(name: "5:30 PM" , cellID: VALUE_L2_CELL)
+//
+//
+//         ]),
+//    Section(name: "Leap!", items: [
+//        TableViewRow(name: "AMC 16" , cellID: VALUE_L1_CELL),
+//		TableViewRow(name: "12:00 PM" , cellID: VALUE_L2_CELL),
+//		TableViewRow(name: "1:30 PM" , cellID: VALUE_L2_CELL)
+//
+//         ])
+//
+//]
 
 	override func viewDidLoad()
 	{
@@ -167,120 +141,133 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 		//	has a non-collapsable L0_Cell
 		//	that is initially expanded
 
-//		let t:[[String: AnyObject]] = appDelegate().theater
-//		let m:[[String: AnyObject]] = appDelegate().movie
-//		
-//		var startRow = 0
-//		var rowNum = -1
-//		
-//		//	loop thru all Movies
-//		for i in 0...m.count - 1
-//		{
-//			let movie = m[i]
-//			
-//			startRow = rowNum + 1
-//			rowNum += 1
-//
-//			var additionalRows = 0
-//			//	L0 dictionary (Movie), one per
-//			//	L0_Cell everything that is statically
-//			//	defined is required to track
-//			//	the state of this UITableViewCell
-//			var l0_dict = [KEY_IS_EXPANDABLE : false,
-//						KEY_IS_EXPANDED : true,
-//						KEY_IS_VISIBLE : true,
-//						KEY_CELL_IDENTIFIER : VALUE_L0_CELL,
-//						KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
-//
-//			//	add Movie title to dictionary
-//			l0_dict[KEY_TITLE] = movie[KEY_TITLE]
-//			/* l0_dict["rowNum"] = rowNum for dbug */
-//
-//			//	loop thru all Theaters and look
-//			//	at now_showing array for this Movie
-//			for j in 0...t.count - 1
-//			{
-//				var tt = t[j] as [String : AnyObject]
-//
-//				for ns in tt[KEY_NOW_SHOWING] as! [AnyObject]
-//				{
-//					//	if the Movie is being shown at this
-//					//	Theater add it to the array
-//					let tms_id = ns[KEY_TMS_ID] as! String
-//
-//					if movie[KEY_TMS_ID] as! String == tms_id
-//					{
-//						rowNum += 1
-//
-//						//	L1 dictionary (Theater), one per
-//						//	L1_Cell everything that is statically
-//						//	defined is required to track
-//						//	the state of this UITableViewCell
-//						var l1_dict = [KEY_IS_EXPANDABLE : true,
-//									KEY_IS_EXPANDED : false,
-//									KEY_IS_VISIBLE : true,
-//									KEY_CELL_IDENTIFIER : VALUE_L1_CELL,
-//									KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
-//
-//						//	add Theater name to
-//						//	L1_Cell  dictionary
-//						l1_dict[KEY_NAME] = tt[KEY_NAME]
-//						
-//						//	add Movie tms_id to
-//						//	L1_Cell dictionary
-//						l1_dict[KEY_TMS_ID] = tms_id
-//						
-//						let alltimes = ns[KEY_ALL_TIMES] as! NSArray
-//
-//						additionalRows += alltimes.count + 1
-//						
-//						//	update additionalRows
-//						//	in L1_Cell dictionary
-//						l1_dict[KEY_ADDITIONAL_ROWS] = alltimes.count
-//						
-//						/*	l1_dict["rowNum"] = rowNum for dbug */
-//
-//						rowDictionary.append(l1_dict)
-//						
-//						for time in alltimes
-//						{
-//							rowNum += 1
-//							
-//							//	L2 dictionary (Movie Showtime),
-//							//	one per L2_Cell everything that
-//							//	is statically defined is required
-//							//	to track the state of this UITableViewCell
-//							
-//							//	L2_Cells by definition are
-//							//	by definition --
-//							//	"isExpandable" : false
-//							//	"isExpanded" : false,
-//							//	"additionalRows" : 0
-//			
-//							var l2_dict = [KEY_IS_EXPANDABLE : false,
-//										KEY_IS_EXPANDED : false,
-//										KEY_IS_VISIBLE : false,
-//										KEY_CELL_IDENTIFIER : VALUE_L2_CELL,
-//										KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
-//							
-//							/* l2_dict["rowNum"] = rowNum for dbug */
-//
-//							//	update additionalRows
-//							//	in L2_Cell dictionary
-//							l2_dict[KEY_TIME] = (time as! [String : AnyObject])[KEY_TIME] as! String
-//							
-//							rowDictionary.append(l2_dict)
-//						}
-//						
-//						break
-//					}
-//				}
-//			}
-//
-//			l0_dict[KEY_ADDITIONAL_ROWS] = additionalRows
-//			rowDictionary.insert(l0_dict, at: startRow)
-//		}
+		let t:[[String: AnyObject]] = appDelegate().theater
+		let m:[[String: AnyObject]] = appDelegate().movie
+		
+		var startRow = 0
+		var rowNum = -1
+		
+		//	loop thru all Movies
+		for i in 0...m.count - 1
+		{
+			let movie = m[i]
+			
+			startRow = rowNum + 1
+			rowNum += 1
+
+			var additionalRows = 0
+			//	L0 dictionary (Movie), one per
+			//	L0_Cell everything that is statically
+			//	defined is required to track
+			//	the state of this UITableViewCell
+			var l0_dict = [KEY_IS_EXPANDABLE : false,
+						KEY_IS_EXPANDED : true,
+						KEY_IS_VISIBLE : true,
+						KEY_CELL_IDENTIFIER : VALUE_L0_CELL,
+						KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
+
+			//	add Movie title to dictionary
+			
+			var section = Section(name: movie[KEY_TITLE] as! String)
+			l0_dict[KEY_TITLE] = movie[KEY_TITLE]
+			/* l0_dict["rowNum"] = rowNum for dbug */
+
+			//	loop thru all Theaters and look
+			//	at now_showing array for this Movie
+			for j in 0...t.count - 1
+			{
+				var tt = t[j] as [String : AnyObject]
+
+				for ns in tt[KEY_NOW_SHOWING] as! [AnyObject]
+				{
+					//	if the Movie is being shown at this
+					//	Theater add it to the array
+					let tms_id = ns[KEY_TMS_ID] as! String
+
+					if movie[KEY_TMS_ID] as! String == tms_id
+					{
+						rowNum += 1
+
+						//	L1 dictionary (Theater), one per
+						//	L1_Cell everything that is statically
+						//	defined is required to track
+						//	the state of this UITableViewCell
+						var l1_dict = [KEY_IS_EXPANDABLE : true,
+									KEY_IS_EXPANDED : false,
+									KEY_IS_VISIBLE : true,
+									KEY_CELL_IDENTIFIER : VALUE_L1_CELL,
+									KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
+
+						
+						//	add Theater name to
+						//	L1_Cell  dictionary
+						l1_dict[KEY_NAME] = tt[KEY_NAME]
+						
+						//TableViewRow(name: tt[KEY_NAME] , cellID: VALUE_L1_CELL)
+						
+						section.items.append(TableViewRow(name: tt[KEY_NAME] as! String , cellID: VALUE_L1_CELL))
+						//	add Movie tms_id to
+						//	L1_Cell dictionary
+						l1_dict[KEY_TMS_ID] = tms_id
+						
+						let alltimes = ns[KEY_ALL_TIMES] as! NSArray
+
+						additionalRows += alltimes.count + 1
+						
+						//	update additionalRows
+						//	in L1_Cell dictionary
+						l1_dict[KEY_ADDITIONAL_ROWS] = alltimes.count
+						
+						/*	l1_dict["rowNum"] = rowNum for dbug */
+
+						rowDictionary.append(l1_dict)
+						
+						for time in alltimes
+						{
+							rowNum += 1
+							
+							//	L2 dictionary (Movie Showtime),
+							//	one per L2_Cell everything that
+							//	is statically defined is required
+							//	to track the state of this UITableViewCell
+							
+							//	L2_Cells by definition are
+							//	by definition --
+							//	"isExpandable" : false
+							//	"isExpanded" : false,
+							//	"additionalRows" : 0
+			
+							var l2_dict = [KEY_IS_EXPANDABLE : false,
+										KEY_IS_EXPANDED : false,
+										KEY_IS_VISIBLE : false,
+										KEY_CELL_IDENTIFIER : VALUE_L2_CELL,
+										KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
+							
+							/* l2_dict["rowNum"] = rowNum for dbug */
+
+							//	update additionalRows
+							//	in L2_Cell dictionary
+							l2_dict[KEY_TIME] = (time as! [String : AnyObject])[KEY_TIME] as! String
+							
+							section.items.append(TableViewRow(name: (time as! [String : AnyObject])[KEY_TIME] as! String , cellID: VALUE_L2_CELL))
+							
+							rowDictionary.append(l2_dict)
+						}
+						
+						break
+					}
+				}
+			}
+
+			l0_dict[KEY_ADDITIONAL_ROWS] = additionalRows
+			rowDictionary.insert(l0_dict, at: startRow)
+			
+			sections.append(section)
+		}
 	
+		//let section = rowDictionary.filter({ $0[KEY_CELL_IDENTIFIER] as? String == VALUE_L0_CELL }).count
+		
+		print(sections.count)
 		tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView(frame: CGRect.zero)

@@ -15,20 +15,19 @@ class L0_Cell: UITableViewHeaderFooterView
 
 	var delegate: L0_Delegate?
     var section: Int = 0
-	
-    override init(reuseIdentifier: String?)
-    {
-        super.init(reuseIdentifier: reuseIdentifier)
 
-        // Content View
+    required init?(coder aDecoder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    override init(reuseIdentifier: String?)
+    { super.init(reuseIdentifier: reuseIdentifier)
+
        //	 contentView.backgroundColor = UIColor(hex: 0x2E3944)
-		
        contentView.backgroundColor = UIColor(hex: 0xEEEEEE)
 
         let marginGuide = contentView.layoutMarginsGuide
 
-        // Title label
         contentView.addSubview(titleLabel)
+        
         titleLabel.textColor = UIColor.black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.topAnchor.constraint(equalTo: marginGuide.topAnchor).isActive = true
@@ -36,14 +35,13 @@ class L0_Cell: UITableViewHeaderFooterView
         titleLabel.bottomAnchor.constraint(equalTo: marginGuide.bottomAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: marginGuide.leadingAnchor).isActive = true
 
-        // Arrow label
         disclosureButton.setImage(UIImage(named: "carat.png"), for: UIControlState.normal)
 		disclosureButton.setImage(UIImage(named: "carat-open.png"), for: UIControlState.selected)
 
 		disclosureButton.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(L0_Cell.tapHeader(_:))))
 
         contentView.addSubview(disclosureButton)
-       // arrowLabel.textColor = UIColor.white
+
         disclosureButton.translatesAutoresizingMaskIntoConstraints = false
         disclosureButton.widthAnchor.constraint(equalToConstant: 24).isActive = true
         disclosureButton.topAnchor.constraint(equalTo: marginGuide.topAnchor).isActive = true
@@ -51,10 +49,6 @@ class L0_Cell: UITableViewHeaderFooterView
 		disclosureButton.bottomAnchor.constraint(equalTo: marginGuide.bottomAnchor).isActive = true
 
          addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(L0_Cell.tapHeader(_:))))
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 
 	@objc func tapHeader(_ gestureRecognizer: UITapGestureRecognizer)
@@ -70,12 +64,5 @@ class L0_Cell: UITableViewHeaderFooterView
         delegate?.toggleSection(self, section: cell.section)
     }
 	
-    func setCollapsed(_ collapsed: Bool) {
-        //
-        // Animate the arrow rotation (see Extensions.swf)
-        //
-		disclosureButton.isSelected = !collapsed
-       // arrowLabel.rotate(collapsed ? 0.0 : .pi / 2)
-    }
-
+    func setCollapsed(_ collapsed: Bool) { disclosureButton.isSelected = !collapsed }
 }
