@@ -15,7 +15,7 @@ I have created another repository, 'controller_embed'. This sample demonstrates 
 
 #### Aug 21, 2017
 
-I have deleted the 'controller_embed' repository in favor of the 'movies' repository. the movies app contains all of the controller_embed app. the movies app is still very fluid as I am still adding stuff in to it from another application.
+I have deleted the 'controller_embed' repository in favor of the 'movies' repository. the movies app contains all of the controller_embed app. the movies app is very fluid as I am still adding stuff in to it from another application.
 
 #### March 12, 2018
 

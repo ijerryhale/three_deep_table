@@ -2,8 +2,8 @@
 //  L0Cell_movie.swift
 //  movies
 //
-//  Created by Jerry Hale on 5/26/17.
-//  Copyright © 2017 jhale. All rights reserved.
+//  Created by Jerry Hale on 3/18/18.
+//  Copyright © 2018 jhale. All rights reserved.
 //
 
 import UIKit
@@ -54,8 +54,12 @@ class L0_Cell: UITableViewHeaderFooterView
         titleLabel.font = UIFont(name: "System", size: 16)
         titleLabel.textColor = UIColor.black
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.heightAnchor.constraint(equalTo: marginGuide.heightAnchor).isActive = true
+		
+		titleLabel.heightAnchor.constraint(equalTo: marginGuide.heightAnchor).isActive = true
         titleLabel.trailingAnchor.constraint(equalTo: marginGuide.trailingAnchor).isActive = true
+
+		titleLabel.topAnchor.constraint(equalTo: marginGuide.topAnchor).isActive = true
+		titleLabel.bottomAnchor.constraint(equalTo: marginGuide.bottomAnchor).isActive = true
  
           addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(L0_Cell.tapHeader(_:))))
     }
