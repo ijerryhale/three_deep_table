@@ -8,12 +8,13 @@
 import UIKit
 
 public struct Section {
-    var name: String
+
+    var dict = [String : Any]()
     var isExpanded: Bool
 	var cell = [[String : Any]]()
 	
 	public init(name: String, isExpanded: Bool = false) {
-        self.name = name
+        self.dict[KEY_NAME] = name
         self.isExpanded = isExpanded
     }
 }
@@ -200,9 +201,7 @@ extension ViewController : UITableViewDataSource
        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: VALUE_L0_CELL) as? L0_Cell ?? L0_Cell(reuseIdentifier: VALUE_L0_CELL)
 
 		header.setIsExpanded(rowDictionary[section].isExpanded)
-		header.addGestureRecognizer(UITapGestureRecognizer(target: header, action: #selector(L0_Cell.tapHeader(_:))))
-		
-        header.titleLabel.text = rowDictionary[section].name
+		header.titleLabel.text = rowDictionary[section].dict[KEY_NAME] as? String
 		header.section = section
 		header.delegate = self
 		

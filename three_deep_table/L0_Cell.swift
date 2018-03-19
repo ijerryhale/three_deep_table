@@ -1,6 +1,5 @@
 //
-//  L0Cell_movie.swift
-//  movies
+//  L0_Cell.swift
 //
 //  Created by Jerry Hale on 3/18/18.
 //  Copyright © 2018 jhale. All rights reserved.
