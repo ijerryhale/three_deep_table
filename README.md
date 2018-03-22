@@ -20,3 +20,5 @@ I have deleted the 'controller_embed' repository in favor of the 'movies' reposi
 #### March 12, 2018
 
 Change design to use UITableView Sections. Will use this code for movies app when it's done.
+
+![three_deep_table](https://user-images.githubusercontent.com/4106530/37745812-47af1b98-2d34-11e8-92a8-e1a00b0633dc.png)"three_deep_table
