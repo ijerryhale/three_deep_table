@@ -154,9 +154,9 @@ extension ViewController: SectionHeaderDelegate
     {
         let isExpanded = !rowDictionary[section].isExpanded
 		
-        // Toggle collapse
-        rowDictionary[section].isExpanded = isExpanded
+        //	toggle collapse
  		header.setIsExpanded(isExpanded)
+ 		rowDictionary[section].isExpanded = isExpanded
 		
         tableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
     }
@@ -171,19 +171,19 @@ extension ViewController : UITableViewDelegate
 	{
 		let cell: [String : Any] = rowDictionary[indexPath.section].cell[indexPath.row]
 
-		if cell[KEY_IS_VISIBLE] as! Bool == false
+		if cell[KEY_IS_VISIBLE] as! Bool == true
 		{
-			return 0
-		}
+			switch cell[KEY_CELL_IDENTIFIER] as! String
+			{
+				case VALUE_L1_CELL:
+					return (30.0)
 
-		switch cell[KEY_CELL_IDENTIFIER] as! String
-		{
-			case VALUE_L1_CELL:
-				return 30.0
-
-			default:
-				return 16.0
+				default:
+					return (16.0)
+			}
 		}
+	
+		return (0)
     }
 }
 
@@ -207,30 +207,6 @@ extension ViewController : UITableViewDataSource
 		
         return (header)
     }
-
-//	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
-//    {
-//        let cell = rowDictionary[indexPath.section].cell[indexPath.row]
-//
-//		if cell[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
-//		{
-//			let c: L1_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L1_CELL) as! L1_Cell
-//
-//			c.name.text = cell[KEY_NAME] as! String
-//
-//			return (c)
-//		}
-//		else if cell[KEY_CELL_IDENTIFIER] as! String == VALUE_L2_CELL
-//		{
-//			let c: L2_Cell = tableView.dequeueReusableCell(withIdentifier: VALUE_L2_CELL) as! L2_Cell
-//
-//			c.time.text = cell[KEY_TIME]  as! String
-//
-//			return (c)
-//		}
-//
-//		return (UITableViewCell())
-//    }
 
     // MARK: UITableView Delegate and Datasource Functions
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
