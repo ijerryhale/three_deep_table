@@ -35,7 +35,7 @@ NSString * const VALUE_L2_CELL = @"L2_Cell";
 
 
 //	required keys to track UITableViewCell
-NSString * const KEY_IS_EXPANDABLE = @"isExpandable";
+NSString * const KEY_CAN_EXPAND = @"canExpand";
 NSString * const KEY_IS_EXPANDED = @"isExpanded";
 NSString * const KEY_IS_VISIBLE = @"isVisible";
 NSString * const KEY_CELL_IDENTIFIER = @"cellIdentifier";

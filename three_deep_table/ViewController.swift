@@ -7,6 +7,20 @@
 
 import UIKit
 
+//	set to false to disallow
+//	expand/collapse of L1_Cell
+let L1_CELL_CAN_EXPAND_COLLAPSE = true
+
+//	set to true to intially
+//	display all L1_Cell's
+//	as expanded
+let L1_CELL_INIT_EXPANDED = false
+
+//	set to true to allow only
+//	one L1_Cell to be expanded
+//	at a time
+let L1_CELL_SINGLE_ROW_SELECT = true
+
 public struct Section {
 
     var dict = [String : Any]()
@@ -21,9 +35,6 @@ public struct Section {
 
 class ViewController: UIViewController
 {
-	//	set to true to allow only
-	//	one L1_Cell to be selected
-	var singleRowSelect = true
 	var rowDictionary = [Section]()
 
 	@IBOutlet weak var tableView: UITableView!
@@ -69,16 +80,21 @@ class ViewController: UIViewController
 					{
 						rowNum += 1
 
-						//	L1 dictionary (Theater), one per
+						//	L1 dictionary -- one Theater per
 						//	L1_Cell everything that is statically
 						//	defined is required to track
 						//	the state of this UITableViewCell
-						var l1_dict = [KEY_IS_EXPANDABLE : true,
-									KEY_IS_EXPANDED : true,
+						
+						//	if L1_CELL_INIT_EXPANDED is set to
+						//	true L1_Cell's will init displaying
+						//	its L2_Cell's
+						
+						var l1_dict = [KEY_CAN_EXPAND : (L1_CELL_CAN_EXPAND_COLLAPSE ? true : false),
+									KEY_IS_EXPANDED : (L1_CELL_INIT_EXPANDED ? true : false),
 									KEY_IS_VISIBLE : true,
 									KEY_CELL_IDENTIFIER : VALUE_L1_CELL,
 									KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
-
+						
 						//	add Theater name to
 						//	L1_Cell  dictionary
 						l1_dict[KEY_NAME] = tt[KEY_NAME]
@@ -101,18 +117,23 @@ class ViewController: UIViewController
 						for time in alltimes
 						{
 							rowNum += 1
-							//	L2 dictionary (Movie Showtime),
-							//	one per L2_Cell everything that
-							//	is statically defined is required
+							//	L2 dictionary -- one Movie Showtime
+							//	per L2_Cell everything that is
+							//	statically defined is required
 							//	to track the state of this UITableViewCell
-							
+
 							//	L2_Cells by definition are
-							//	"isExpandable" : false
-							//	"isExpanded" : false,
-							//	"additionalRows" : 0
-							var l2_dict = [KEY_IS_EXPANDABLE : false,
+							//	KEY_CAN_EXPAND : false
+							//	KEY_IS_EXPANDED : false,
+							//	KEY_ADDITIONAL_ROWS : 0
+
+							//	these keys are only in L2_Cell's
+							//	to allow for treating all Cell dicts
+							//	as basically the same and for an easy
+							//	expansion to an L3_Cell, L4_Cell, etc.
+							var l2_dict = [KEY_CAN_EXPAND : false,
 										KEY_IS_EXPANDED : false,
-										KEY_IS_VISIBLE : true,
+										KEY_IS_VISIBLE : (L1_CELL_INIT_EXPANDED ? true : false),
 										KEY_CELL_IDENTIFIER : VALUE_L2_CELL,
 										KEY_ADDITIONAL_ROWS : 0 ] as [String : Any]
 							
@@ -129,8 +150,6 @@ class ViewController: UIViewController
 
 			rowDictionary.append(section)
 		}
-		
-		print(rowDictionary.count)
 
 		tableView.delegate = self
         tableView.dataSource = self
@@ -231,60 +250,56 @@ extension ViewController : UITableViewDataSource
 		return cell
     }
 	
-//	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
-//	{
-//		let rowDict = rowDictionary[indexPath.section].cell[indexPath.row]
-//
-//		if singleRowSelect == true
-//		&& rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
-//		{
-//			var index = 0
-//			for var rd in rowDictionary
-//			{
-//				if rd[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
-//				{
-//					if rd[KEY_IS_EXPANDED] as! Bool == true
-//					{
-//						rd[KEY_IS_EXPANDED] = false
-//					}
-//				}
-//				else if rd["additionalRows"] as! Int == 0
-//				{
-//					if rd["isVisible"] as! Bool == true
-//					{
-//						rd["isVisible"] = false
-//					}
-//				}
-//
-//				rowDictionary[index] = rd
-//
-//				index += 1
-//			}
-//		}
-//
-//		if rowDict[KEY_IS_EXPANDABLE] as! Bool == true
-//		{
-//            var shouldExpandAndShowSubRows = false
-//
-//            if rowDict[KEY_IS_EXPANDED] as! Bool == false
-//			{
-//                shouldExpandAndShowSubRows = true
-//            }
-//
-//            rowDict[KEY_IS_EXPANDED] = shouldExpandAndShowSubRows
-//
-//			for i in (indexPath.row + 1)...(indexPath.row + (rowDict[KEY_ADDITIONAL_ROWS] as! Int))
-//			{
-//				var d = rowDictionary[i] as [String:Any]
-//
-//				d[KEY_IS_VISIBLE] = shouldExpandAndShowSubRows
-//
-//				rowDictionary[i] = d
-//           }
-//		}
-//
-//		rowDictionary[indexPath.row] = rowDict
-//
-//		tableView.reloadSections(NSIndexSet(index: indexPath.section) as IndexSet, with: UITableViewRowAnimation.fade)
-//	}
+	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+	{
+		var section = rowDictionary[indexPath.section]
+		var rowDict = section.cell[indexPath.row]
+
+		if rowDict[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
+		{
+			if L1_CELL_SINGLE_ROW_SELECT == true
+			{
+				var index = 0
+				for var rd in section.cell
+				{
+					if rd[KEY_CELL_IDENTIFIER] as! String == VALUE_L1_CELL
+					{
+						if rd[KEY_IS_EXPANDED] as! Bool == true
+						{
+							rd[KEY_IS_EXPANDED] = false
+						}
+					}
+					else if rd[KEY_ADDITIONAL_ROWS] as! Int == 0
+					{
+						if rd[KEY_IS_VISIBLE] as! Bool == true
+						{
+							rd[KEY_IS_VISIBLE] = false
+						}
+					}
+
+					rowDictionary[indexPath.section].cell[index] = rd
+
+					index += 1
+				}
+			}
+
+			if rowDict[KEY_CAN_EXPAND] as! Bool == true
+			{
+				var shouldExpand = false
+
+				if rowDict[KEY_IS_EXPANDED] as! Bool == false { shouldExpand = true }
+
+				rowDict[KEY_IS_EXPANDED] = shouldExpand
+
+				for i in (indexPath.row + 1)...(indexPath.row + (rowDict[KEY_ADDITIONAL_ROWS] as! Int))
+				{
+					rowDictionary[indexPath.section].cell[i][KEY_IS_VISIBLE] = shouldExpand
+			   }
+			}
+
+			rowDictionary[indexPath.section].cell[indexPath.row] = rowDict
+
+			tableView.reloadSections(NSIndexSet(index: indexPath.section) as IndexSet, with: .left)
+		}
+	}
 }
