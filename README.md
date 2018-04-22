@@ -23,6 +23,6 @@ Change design to use UITableView Sections. Will use this code for movies app whe
 
 #### April 22, 2018
 
-Add variables to select how L1_Cell's are displayed/handled and restored all of the old SINGLEROWSELECT code which allowed for auto-collapsing L2_Cell's.
+Add variables to select how L1 Cell's are displayed/handled and restored all of the old SINGLEROWSELECT code which allowed for auto-collapsing L2 Cell's.
 
 ![three_deep_table](https://user-images.githubusercontent.com/4106530/37745812-47af1b98-2d34-11e8-92a8-e1a00b0633dc.png)
