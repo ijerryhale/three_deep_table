@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //
 //  Created by Jerry Hale on 4/11/17.
-//  Copyright © 2017 jhale. All rights reserved.
+//  Copyright © 2019 jhale. All rights reserved.
 //
 
 import UIKit
@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		return []
 	}
 
-	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool
+	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool
 	{
 		//	read the theater.json file
 		theater = readjson() as! [[String : AnyObject]]

@@ -2,7 +2,7 @@
 //  L0_Cell.swift
 //
 //  Created by Jerry Hale on 3/18/18.
-//  Copyright © 2018 jhale. All rights reserved.
+//  Copyright © 2019 jhale. All rights reserved.
 //
 
 import UIKit
@@ -35,8 +35,8 @@ class L0_Cell: UITableViewHeaderFooterView
 
         let marginGuide = contentView.layoutMarginsGuide
 		
-        disclosureButton.setImage(UIImage(named: "carat.png"), for: UIControlState.normal)
-		disclosureButton.setImage(UIImage(named: "carat-open.png"), for: UIControlState.selected)
+        disclosureButton.setImage(UIImage(named: "carat.png"), for: UIControl.State.normal)
+		disclosureButton.setImage(UIImage(named: "carat-open.png"), for: UIControl.State.selected)
 
         contentView.addSubview(disclosureButton)
 
