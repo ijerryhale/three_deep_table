@@ -26,4 +26,8 @@ Update to XCode 10.2, Swift 5
 
 The movies repository uses a modified version of this UITableView This version needs work on constraints.
 
+#### June 2, 2019
+
+Fixed a couple minor bugs and fixed constraints issues in L0_Cell.swift
+
 ![three_deep_table](https://user-images.githubusercontent.com/4106530/37745812-47af1b98-2d34-11e8-92a8-e1a00b0633dc.png)
